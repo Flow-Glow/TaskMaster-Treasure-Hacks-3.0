@@ -7,27 +7,29 @@ import flet as ft
 
 
 class App(ft.UserControl):
+
     def __init__(self) -> None:
         super().__init__()
+        # App Title
         self.title = ft.Text(value="TaskMaster", style="displayLarge",
                              height=100, color=ft.colors.CYAN,
-                              font_family="Consolas")
+                             font_family="Consolas")
+        # A field for the user to input their task
         self.task_input_field = ft.TextField(
             hint_text="Add a task and set duration!", autofocus=True, width=500, on_change=self.on_text_field_changed)
+        # A button to add task
         self.add_button = ft.FloatingActionButton(icon=ft.icons.ADD, shape=ft.CircleBorder(
         ), bgcolor=ft.colors.CYAN_300, on_click=self.on_add_button_clicked)
+        # A column
         self.columns = ft.Column()
-        self.time_slider = ft.Slider(min=0, max=60, divisions=60, label="Duration {value} minutes")
-        self.time_slider_view = ft.Column(controls=[ft.Text(value="Choose duration via slider: "), self.time_slider], visible=False)
+        # A responsive view for time slider
+        self.time_slider = ft.Slider(
+            min=0, max=60, divisions=60, label="Duration {value} minutes")
+        self.time_slider_view = ft.Column(controls=[ft.Text(
+            value="Choose duration via slider: "), self.time_slider], visible=False)
 
     def build(self):
-
-        # App Title
-        # A field for the user to input their task
-        # A button to add task
-        # A column
-        # Make a responsive view for time slider
-
+        
         # This will return what the user see
         return ft.Column(
             width=585,
@@ -35,7 +37,8 @@ class App(ft.UserControl):
                 # First row for title
                 ft.Row([self.title], alignment="center"),
                 # Second for the inputting task
-                ft.Row([self.task_input_field, self.add_button], alignment="center"),
+                ft.Row([self.task_input_field, self.add_button],
+                       alignment="center"),
                 # Third row for task duration slider
                 ft.Row([self.time_slider_view], alignment="center"),
                 # Return self.column, so later we can add tasks below this column
@@ -48,7 +51,8 @@ class App(ft.UserControl):
             self.task_input_field.error_text = "Please enter your task"
         else:
             # Create a task instance
-            new_task = Task(self.task_input_field.value, self.time_slider.value)
+            new_task = Task(self.task_input_field.value,
+                            self.time_slider.value)
             # Add the new task below the 'column'
             self.columns.controls.append(new_task)
             # Remove the input field
