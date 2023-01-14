@@ -8,11 +8,15 @@ import flet as ft
 
 class App(ft.UserControl):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, username, *args, **kwargs) -> None:
+        self.username = username
+        super().__init__(*args, **kwargs)
         # App Title
-        self.title = ft.Text(value="TaskMaster", style="displayLarge",
+        self.title = ft.Text(value="TaskMaster", size=50,
                              height=100, color=ft.colors.CYAN,
+                             font_family="Consolas")
+        self.hello = ft.Text(value=f"Hello {self.username} 👋", size=20,
+                             height=30, color=ft.colors.CYAN,
                              font_family="Consolas")
         # A field for the user to input their task
         self.task_input_field = ft.TextField(
@@ -36,6 +40,8 @@ class App(ft.UserControl):
             controls=[
                 # First row for title
                 ft.Row([self.title], alignment="center"),
+                #top left corner
+                ft.Row([self.hello], alignment="center"),
                 # Second for the inputting task
                 ft.Row([self.task_input_field, self.add_button],
                        alignment="center"),

@@ -11,12 +11,10 @@ def main(page: Page):
     page.horizontal_alignment = "center"
     page.update()
 
-    # login = Login(app=page)
-    # page.add(login)
-    
-    # For testing the application without having to login
-    app = App()
-    page.add(app)
+    # create an instance of hell the app
+    login = Login(app=page)
+    page.add(login)
+
 
 if __name__ == "__main__":
     flet.app(target=main)

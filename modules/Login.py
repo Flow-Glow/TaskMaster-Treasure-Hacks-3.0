@@ -13,14 +13,32 @@ from flet import (
     Margin
 )
 
+from modules.application import App
+from modules.Utils import fb
+
+
+
+
 
 class Login(Container):
+    config = {
+        "apiKey": "AIzaSyDkiJYNGsRnSlVAd1eQ5Am8IWYgUgsdgBo",
+        "authDomain": "taskmaster-992bc.firebaseapp.com",
+        "projectId": "taskmaster-992bc",
+        "storageBucket": "taskmaster-992bc.appspot.com",
+        "messagingSenderId": "309035351282",
+        "appId": "1:309035351282:web:d7e157294b37453e4ea46b",
+        "measurementId": "G-CK5YXPBD98",
+        "databaseURL": "https://taskmaster-992bc-default-rtdb.firebaseio.com/"
+    }
+
     def __init__(self, app, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Container Prop
         self.password = None
         self.username = None
         self.loading = None
+        self.firebase = fb(self.config)
         self.app = app
         self.expand = True
         self.content = Column(
@@ -37,7 +55,25 @@ class Login(Container):
             self.update()
             return
         else:
-            pass
+            self.loading.visible = True
+            self.update()
+            # check if user exists in db
+            if self.firebase.check_exist(self.username.value):
+                if self.firebase.get_data(self.username.value)["password"] == self.password.value:
+                    print("Signed in")
+                    self.app.remove(self)
+                    self.app.add(App(self.username.value))
+                else:
+                    self.loading.visible = False
+                    self.password.error_text = "Wrong password or username already exists"
+                self.update()
+                return
+            else:
+                self.firebase.set_data(self.username.value, {"password": self.password.value})
+                self.app.remove(self)
+                self.app.add(App(self.username.value))
+                self.update()
+
 
     def LoginContainer(self):
         # Login Page Data
