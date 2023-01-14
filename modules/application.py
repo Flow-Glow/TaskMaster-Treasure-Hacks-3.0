@@ -13,24 +13,25 @@ class App(ft.UserControl):
     def build(self):
 
         self.title = ft.Text(value="TaskMaster", style="displayLarge",
-                             height=100, color=ft.colors.CYAN_300, font_family="Consolas")
+                             height=100, color=ft.colors.CYAN, font_family="Consolas")
         self.task_input_field = ft.TextField(
-            hint_text="Add your task", autofocus=True, width=500
-        )
-        self.add_button = ft.FloatingActionButton(
-            icon=ft.icons.ADD, shape=ft.CircleBorder(), bgcolor=ft.colors.CYAN_300, on_click=self.on_add_button_clicked
-        )
+            hint_text="Add your task", autofocus=True, width=500)
+        self.add_button = ft.FloatingActionButton(icon=ft.icons.ADD, shape=ft.CircleBorder(
+        ), bgcolor=ft.colors.CYAN_300, on_click=self.on_add_button_clicked)
+        self.columns = ft.Column()
 
-        return ft.Column(controls=[
-            # First row for title
-            ft.Row(
-                [self.title],
-                alignment="center"),
-            # Second for the inputting task
-            ft.Row(
-                [self.task_input_field, self.add_button],
-                alignment="center")
-        ])
+        # This will return what the user see
+        return ft.Column(
+            width=585,
+            controls=[
+                # First row for title
+                ft.Row([self.title], alignment="center"),
+                # Second for the inputting task
+                ft.Row([self.task_input_field, self.add_button],
+                       alignment="center"),
+                # Return self.column so later we can add tasks below this column
+                self.columns
+            ])
 
     def on_add_button_clicked(self, e):
         if not self.task_input_field.value:
@@ -39,10 +40,9 @@ class App(ft.UserControl):
             self.update()
         else:
             # Create a task instance
-            new_task = Task()
-            # Add the new task to the page
-            self.controls.append(new_task)
-            # Remove
-            self.task_input_field.current = ""
+            new_task = Task(self.task_input_field.value)
+            # Add the new task below the 'column'
+            self.columns.controls.append(new_task)
+            # Remove the input field
+            self.task_input_field.value = ""
             self.update()
-            self.task_input_field.current.focus()
