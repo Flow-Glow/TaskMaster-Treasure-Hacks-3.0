@@ -6,12 +6,13 @@ import flet as ft
 
 
 class Task(ft.UserControl):
-    def __init__(self, new_task: str) -> None:
+    def __init__(self, task_name, duration) -> None:
         super().__init__()
-        self.task_name = new_task
+        self.task_name = task_name
+        self.task_duration = duration
 
     def build(self):
-        self.task_checkbox = ft.Checkbox(label=self.task_name)
+        self.task_checkbox = ft.Checkbox(label=f"{self.task_name} - {self.task_duration} minutes")
 
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(

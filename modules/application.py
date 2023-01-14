@@ -14,10 +14,11 @@ class App(ft.UserControl):
 
         # App Title
         self.title = ft.Text(value="TaskMaster", style="displayLarge",
-                             height=100, color=ft.colors.CYAN, font_family="Consolas")
+                             height=100, color=ft.colors.CYAN,
+                              font_family="Consolas")
         # A field for the user to input their task
         self.task_input_field = ft.TextField(
-            hint_text="Add your task and set time below", autofocus=True, width=500, on_change=self.on_text_field_changed)
+            hint_text="Add a task and set duration!", autofocus=True, width=500, on_change=self.on_text_field_changed)
         # A button to add task 
         self.add_button = ft.FloatingActionButton(icon=ft.icons.ADD, shape=ft.CircleBorder(
         ), bgcolor=ft.colors.CYAN_300, on_click=self.on_add_button_clicked)
@@ -48,7 +49,7 @@ class App(ft.UserControl):
             self.update()
         else:
             # Create a task instance
-            new_task = Task(self.task_input_field.value)
+            new_task = Task(self.task_input_field.value, self.time_slider.value)
             # Add the new task below the 'column'
             self.columns.controls.append(new_task)
             # Remove the input field
