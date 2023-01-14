@@ -2,6 +2,7 @@
 import flet
 from modules.application import App
 from flet import Page
+import time
 
 
 def main(page: Page):
@@ -14,4 +15,6 @@ def main(page: Page):
     page.add(app)
 
 
-flet.app(target=main)
+
+if __name__ == "__main__":
+    flet.app(target=main)
