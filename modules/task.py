@@ -19,7 +19,7 @@ class Task(ft.UserControl):
         self.task_checkbox = ft.Checkbox(
             label=f"{self.task_name} - {int(self.task_duration)} minutes")
         self.edit_name = ft.TextField(autofocus=True, width=500, height=60)
-        self.edit_duration = ft.Slider(min=1, max=60, divisions=59, label="Duration {value} minutes")
+        self.edit_duration = ft.Slider(min=1, max=60, divisions=59, label="Duration {value} minutes",width=250)
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
             alignment="spaceBetween",
@@ -53,12 +53,13 @@ class Task(ft.UserControl):
         # A form that is only visible when the user want to edit the task
         self.edit_view = ft.Row(
             visible=False,
-            alignment="spaceBetween",
+            alignment="center",
             vertical_alignment="center",
             controls=[
                 ft.Column(controls=[
                     self.edit_name,
-                    self.edit_duration,
+                    ft.Row(controls=[ft.Text("Set new Duration: "),
+                    self.edit_duration]),
                     ft.IconButton(
                         icon=ft.icons.SAVE,
                         icon_color=ft.colors.BLUE,
