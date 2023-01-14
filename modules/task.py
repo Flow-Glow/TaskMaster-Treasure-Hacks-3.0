@@ -12,7 +12,7 @@ class Task(ft.UserControl):
         self.task_duration = duration
 
     def build(self):
-        self.task_checkbox = ft.Checkbox(label=f"{self.task_name} - {self.task_duration} minutes")
+        self.task_checkbox = ft.Checkbox(label=f"{self.task_name} - {int(self.task_duration)} minutes")
 
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
