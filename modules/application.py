@@ -21,7 +21,7 @@ class App(ft.UserControl):
         self.add_button = ft.FloatingActionButton(icon=ft.icons.ADD, shape=ft.CircleBorder(
         ), bgcolor=ft.colors.CYAN_300, on_click=self.on_add_button_clicked)
         # A column
-        self.columns = ft.Column()
+        self.task_list = ft.Column()
         # A responsive view for time slider
         self.time_slider = ft.Slider(
             min=0, max=60, divisions=60, label="Duration {value} minutes")
@@ -29,7 +29,7 @@ class App(ft.UserControl):
             value="Choose duration via slider: "), self.time_slider], visible=False)
 
     def build(self):
-        
+
         # This will return what the user see
         return ft.Column(
             width=585,
@@ -42,7 +42,7 @@ class App(ft.UserControl):
                 # Third row for task duration slider
                 ft.Row([self.time_slider_view], alignment="center"),
                 # Return self.column, so later we can add tasks below this column
-                self.columns
+                self.task_list
             ])
 
     def on_add_button_clicked(self, e):
@@ -52,9 +52,9 @@ class App(ft.UserControl):
         else:
             # Create a task instance
             new_task = Task(self.task_input_field.value,
-                            self.time_slider.value)
-            # Add the new task below the 'column'
-            self.columns.controls.append(new_task)
+                            self.time_slider.value, self.delete_task)
+            # Add the new task to the list
+            self.task_list.controls.append(new_task)
             # Remove the input field
             self.task_input_field.value = ""
             self.time_slider_view.visible = False
@@ -64,4 +64,9 @@ class App(ft.UserControl):
     # This function detect whenever the user enter anything to make the time slider view visible
     def on_text_field_changed(self, e):
         self.time_slider_view.visible = bool(self.task_input_field.value)
+        self.update()
+
+    # Function to remove a task from the list
+    def delete_task(self, task: Task):
+        self.task_list.controls.remove(task)
         self.update()

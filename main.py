@@ -15,6 +15,5 @@ def main(page: Page):
     page.add(app)
 
 
-
 if __name__ == "__main__":
     flet.app(target=main)

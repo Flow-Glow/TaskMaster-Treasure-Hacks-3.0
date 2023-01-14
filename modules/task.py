@@ -6,13 +6,16 @@ import flet as ft
 
 
 class Task(ft.UserControl):
-    def __init__(self, task_name, duration) -> None:
+
+    def __init__(self, task_name, duration, remove_func) -> None:
         super().__init__()
         self.task_name = task_name
         self.task_duration = duration
+        self.remove = remove_func
 
     def build(self):
-        self.task_checkbox = ft.Checkbox(label=f"{self.task_name} - {int(self.task_duration)} minutes")
+        self.task_checkbox = ft.Checkbox(
+            label=f"{self.task_name} - {int(self.task_duration)} minutes")
 
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
@@ -29,16 +32,20 @@ class Task(ft.UserControl):
                         ft.IconButton(
                             icon=ft.icons.CREATE_OUTLINED,
                             tooltip="Edit",
-                            icon_color=ft.colors.BLACK
+                            icon_color=ft.colors.BLACK,
                         ),
                         # Delete Icon
                         ft.IconButton(
                             ft.icons.DELETE_OUTLINE,
                             tooltip="Delete",
-                            icon_color=ft.colors.RED
+                            icon_color=ft.colors.RED,
+                            on_click=self.on_remove_task_clicked
                         ),
                     ],
                 ),
             ],
         )
         return ft.Column(controls=[self.display_task])
+
+    def on_remove_task_clicked(self, e):
+        self.remove(self)
