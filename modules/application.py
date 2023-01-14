@@ -2,11 +2,13 @@
 Instance of the application
 """
 
+from modules.task import Task
 import flet as ft
-from task import *
 
 
 class App(ft.UserControl):
+    def __init__(self) -> None:
+        super().__init__()
 
     def build(self):
 
@@ -24,7 +26,7 @@ class App(ft.UserControl):
             ft.Row(
                 [self.title],
                 alignment="center"),
-            # Second for for the inputting task
+            # Second for the inputting task
             ft.Row(
                 [self.task_input_field, self.add_button],
                 alignment="center")
