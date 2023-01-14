@@ -5,13 +5,42 @@ Instance of the application
 import flet as ft
 from task import *
 
+
 class App(ft.UserControl):
 
     def build(self):
-        self.task_input_field = ft.TextField(hint_text="Add your task", autofocus=True, width=500)
+
+        self.title = ft.Text(value="TaskMaster", style="displayLarge",
+                             height=100, color=ft.colors.CYAN_300, font_family="Consolas")
+        self.task_input_field = ft.TextField(
+            hint_text="Add your task", autofocus=True, width=500
+        )
+        self.add_button = ft.FloatingActionButton(
+            icon=ft.icons.ADD, shape=ft.CircleBorder(), bgcolor=ft.colors.CYAN_300, on_click=self.on_add_button_clicked
+        )
+
         return ft.Column(controls=[
-            #First row for title
-            ft.Row([ft.Text(value="Todos", style="displayLarge")], alignment="center"),
-            #Second for for the inputting task
-            ft.Row([self.task_input_field], alignment="center"),
+            # First row for title
+            ft.Row(
+                [self.title],
+                alignment="center"),
+            # Second for for the inputting task
+            ft.Row(
+                [self.task_input_field, self.add_button],
+                alignment="center")
         ])
+
+    def on_add_button_clicked(self, e):
+        if not self.task_input_field.value:
+            # If the user didn't input anything display an error
+            self.task_input_field.error_text = "Please enter your task"
+            self.update()
+        else:
+            # Create a task instance
+            new_task = Task()
+            # Add the new task to the page
+            self.controls.append(new_task)
+            # Remove
+            self.task_input_field.current = ""
+            self.update()
+            self.task_input_field.current.focus()
