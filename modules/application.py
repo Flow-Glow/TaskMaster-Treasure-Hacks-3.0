@@ -24,7 +24,7 @@ class App(ft.UserControl):
         self.task_list = ft.Column()
         # A responsive view for time slider
         self.time_slider = ft.Slider(
-            min=0, max=60, divisions=60, label="Duration {value} minutes")
+            min=1, max=60, divisions=59, label="Duration {value} minutes")
         self.time_slider_view = ft.Column(controls=[ft.Text(
             value="Choose duration via slider: "), self.time_slider], visible=False)
 
@@ -70,3 +70,5 @@ class App(ft.UserControl):
     def delete_task(self, task: Task):
         self.task_list.controls.remove(task)
         self.update()
+
+    # Function to allow edit a task

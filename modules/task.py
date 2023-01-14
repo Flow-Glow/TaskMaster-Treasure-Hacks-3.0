@@ -12,11 +12,14 @@ class Task(ft.UserControl):
         self.task_name = task_name
         self.task_duration = duration
         self.remove = remove_func
+        
 
     def build(self):
+
         self.task_checkbox = ft.Checkbox(
             label=f"{self.task_name} - {int(self.task_duration)} minutes")
-
+        self.edit_name = ft.TextField(autofocus=True, width=500, height=60)
+        self.edit_duration = ft.Slider(min=1, max=60, divisions=59, label="Duration {value} minutes")
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
             alignment="spaceBetween",
@@ -33,6 +36,7 @@ class Task(ft.UserControl):
                             icon=ft.icons.CREATE_OUTLINED,
                             tooltip="Edit",
                             icon_color=ft.colors.BLACK,
+                            on_click=self.on_edit_clicked
                         ),
                         # Delete Icon
                         ft.IconButton(
@@ -45,7 +49,40 @@ class Task(ft.UserControl):
                 ),
             ],
         )
-        return ft.Column(controls=[self.display_task])
+
+        # A form that is only visible when the user want to edit the task
+        self.edit_view = ft.Row(
+            visible=False,
+            alignment="spaceBetween",
+            vertical_alignment="center",
+            controls=[
+                ft.Column(controls=[
+                    self.edit_name,
+                    self.edit_duration,
+                    ft.IconButton(
+                        icon=ft.icons.SAVE,
+                        icon_color=ft.colors.BLUE,
+                        tooltip="Save",
+                        on_click=self.on_save_clicked
+                    )
+                        ]
+                )
+            ]
+        )
+        return ft.Column(controls=[self.display_task, self.edit_view])
 
     def on_remove_task_clicked(self, e):
         self.remove(self)
+
+    def on_edit_clicked(self, e):
+        self.edit_name.value = self.task_name
+        self.display_task.visible = False
+        self.edit_view.visible = True
+        self.update()
+
+    # Change the label of the checkbox after edited
+    def on_save_clicked(self, e):
+        self.task_checkbox.label = f"{self.edit_name.value} - {int(self.edit_duration.value)} minutes"
+        self.display_task.visible = True
+        self.edit_view.visible = False
+        self.update()
