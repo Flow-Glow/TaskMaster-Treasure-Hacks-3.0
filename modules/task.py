@@ -12,13 +12,14 @@ class Task(ft.UserControl):
     def __init__(self, task_name, duration, remove_func, username) -> None:
         super().__init__()
         self.task_name = task_name
-        self.task_duration = int(duration)
+        self.task_duration = duration
         self.remain_duration = self.task_duration
         self.remove = remove_func
         self.username = username
         self.firebase = fb()
+        self.data = dict(self.firebase.get_data(self.username))
         if self.task_duration is None:
-            self.task_duration = 10
+            self.task_duration = 1
             return
 
     def build(self):
@@ -118,15 +119,16 @@ class Task(ft.UserControl):
     def on_save_clicked(self, e):
         self.task_checkbox.label = f"{self.edit_name.value} - {int(self.edit_duration.value)} minutes"
         self.task_duration = int(self.edit_duration.value)
-        self.task_name = self.edit_name
         self.display_task.visible = True
         self.edit_view.visible = False
         data = dict(self.firebase.get_data(self.username))
         for i in range(len(data["Tasks"])):
             if data["Tasks"][i][0] == self.task_name:
                 data["Tasks"][i][0] = self.edit_name.value
-                data["Tasks"][i][1] = self.edit_duration.value
+                data["Tasks"][i][1] = self.task_duration
                 break
+
+        print(data)
         self.firebase.update_data(self.username, dict(data))
         self.update()
 
@@ -138,19 +140,21 @@ class Task(ft.UserControl):
         self.play_btn.visible = False
         self.pause_btn.visible = True
         # counting down
-        for i in range(self.task_duration*60 + 1):
+        for i in range(int(self.task_duration*60) + 1):
             self.timer_progess_bar.value = i*(1/(self.task_duration*60))
             # If the timer count down to 0
-            if i == self.task_duration*60:
-                self.task_checkbox.disabled = False 
+            if i == self.task_duration*60 + 1:
+                self.task_checkbox.disabled = False
                 self.timer_view.visible = False
                 self.task_checkbox.value = True
                 self.play_btn.visible = True
                 self.pause_btn.visible = False
+                self.data["productivity"] += self.task_duration/100
+                self.firebase.update_data(self.username, self.data)
             sleep(1)
             self.remain_duration = self.task_duration*60 - 1
             self.update()
-    
+
     # To puase the timer
     def on_pause_clicked(self, e):
         self.play_btn.visible = True
@@ -158,5 +162,4 @@ class Task(ft.UserControl):
         self.timer_progess_bar.visible = False
         self.task_duration = self.remain_duration/60
         self.update()
-
 

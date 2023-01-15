@@ -36,21 +36,23 @@ class App(ft.UserControl):
             value="Choose duration via slider: "), self.time_slider], visible=False)
         self.data = dict(self.firebase.get_data(self.username))
         self.productivityBar = ft.ProgressBar(
-                                              bgcolor="#eeeeee",
-                                              value=self.data["productivity"],
-                                              height=10,
-                                              tooltip="Productivity Bar",
-                                              expand=True,
+            bgcolor="#eeeeee",
+            value=self.data["productivity"],
+            height=10,
+            tooltip="Productivity Bar",
+            expand=True,
 
-                                              )
-
-
+        )
 
     def load_tasks(self):
         if 'Tasks' in self.data.keys():
             for task in self.data["Tasks"]:
                 new_task = Task(task[0], task[1], self.delete_task, self.username)
                 self.task_list.controls.append(new_task)
+
+    def load_productivity(self):
+        self.productivityBar.value = self.data["productivity"]
+        self.update()
 
     def build(self):
         self.load_tasks()
@@ -72,7 +74,7 @@ class App(ft.UserControl):
                 ft.Row([self.time_slider_view], alignment="center"),
                 # Return self.column, so later we can add tasks below this column
                 self.task_list,
-                #put the productivity bar at the top right corner
+                # put the productivity bar at the top right corner
 
             ])
 
