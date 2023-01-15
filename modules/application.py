@@ -41,13 +41,12 @@ class App(ft.UserControl):
             height=10,
             tooltip="Productivity Bar",
             expand=True,
-
         )
 
     def load_tasks(self):
         if 'Tasks' in self.data.keys():
             for task in self.data["Tasks"]:
-                new_task = Task(task[0], task[1], self.delete_task, self.username)
+                new_task = Task(task[0], task[1], self.delete_task, self.username,self.productivityBar)
                 self.task_list.controls.append(new_task)
 
     def load_productivity(self):
@@ -111,3 +110,4 @@ class App(ft.UserControl):
 
         self.firebase.update_data(self.username, self.data)
         self.update()
+

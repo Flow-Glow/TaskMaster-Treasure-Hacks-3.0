@@ -9,7 +9,7 @@ from time import sleep
 
 class Task(ft.UserControl):
 
-    def __init__(self, task_name, duration, remove_func, username) -> None:
+    def __init__(self, task_name, duration, remove_func, username,progbar) -> None:
         super().__init__()
         self.task_name = task_name
         self.task_duration = duration
@@ -18,6 +18,7 @@ class Task(ft.UserControl):
         self.username = username
         self.firebase = fb()
         self.data = dict(self.firebase.get_data(self.username))
+        self.progbar = progbar
         if self.task_duration is None:
             self.task_duration = 1
             return
@@ -149,8 +150,12 @@ class Task(ft.UserControl):
                 self.task_checkbox.value = True
                 self.play_btn.visible = True
                 self.pause_btn.visible = False
+                print(self.progbar.value)
                 self.data["productivity"] += self.task_duration/100
                 self.firebase.update_data(self.username, self.data)
+                self.progbar.value = self.data["productivity"]
+                print(self.progbar.value)
+                self.update()
             sleep(1)
             self.remain_duration = self.task_duration*60 - 1
             self.update()
