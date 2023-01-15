@@ -25,7 +25,10 @@ class Task(ft.UserControl):
         self.task_checkbox = ft.Checkbox(
             label=f"{self.task_name} - {int(self.task_duration)} minutes")
         self.edit_name = ft.TextField(autofocus=True, width=500, height=60)
-        self.edit_duration = ft.Slider(min=1, max=60, divisions=59, label="Duration {value} minutes", width=250,value= self.task_duration)
+        self.edit_duration = ft.Slider(
+            min=1, max=60, divisions=59, label="Duration {value} minutes", width=250, value=self.task_duration)
+        self.pb = ft.ProgressBar()
+
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
             alignment="spaceBetween",
@@ -51,6 +54,14 @@ class Task(ft.UserControl):
                             icon_color=ft.colors.RED,
                             on_click=self.on_remove_task_clicked
                         ),
+                        # Start Icon
+                        ft.IconButton(
+                            ft.icons.PLAY_CIRCLE,
+                            tooltip="Start Timer",
+                            icon_color=ft.colors.GREEN,
+                            on_click=self.on_start_clicked
+                        )
+
                     ],
                 ),
             ],
@@ -71,12 +82,19 @@ class Task(ft.UserControl):
                         icon_color=ft.colors.BLUE,
                         tooltip="Save",
                         on_click=self.on_save_clicked
+
                     )
                 ]
                 )
             ]
         )
-        return ft.Column(controls=[self.display_task, self.edit_view])
+
+        # A timer that is only visible when the user start the task
+        self.timer_view = ft.Column(controls=
+            [ft.Text(self.task_name), self.pb], visible=False)
+
+        # Return the controls
+        return ft.Column(controls=[self.display_task, self.edit_view, ft.Row([self.timer_view])])
 
     def on_remove_task_clicked(self, e):
         self.remove(self)
@@ -98,5 +116,8 @@ class Task(ft.UserControl):
                 data["Tasks"][i][0] = self.edit_name.value
                 data["Tasks"][i][1] = self.edit_duration.value
                 break
-        self.firebase.update_data(self.username,dict(data))
+        self.firebase.update_data(self.username, dict(data))
         self.update()
+
+    def on_start_clicked(self, e):
+        self.timer_view.visible = True

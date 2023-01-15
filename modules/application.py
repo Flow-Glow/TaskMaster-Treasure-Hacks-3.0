@@ -106,8 +106,8 @@ class App(ft.UserControl):
     # Function to remove a task from the list
     def delete_task(self, task: Task):
         self.task_list.controls.remove(task)
-        self.data["Tasks"] = [{i: [task.task_name, task.task_duration]} for i, task in
-                              enumerate(self.task_list.controls)]
+        self.data["Tasks"] = [[task.task_name, task.task_duration] for task in
+                              self.task_list.controls]
 
         self.firebase.update_data(self.username, self.data)
         self.update()
