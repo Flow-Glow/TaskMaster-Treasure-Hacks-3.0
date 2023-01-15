@@ -20,8 +20,9 @@ a time for a task, logging in, and keeping track of and receiving currency.
 ### Project features
 * To-do list.
 * Productivity meter.
-* Custom time limits for each task. Task can be paused but can not be checked off before the timer runs out.
-
+* Custom time limits for each task.
+* Task can be paused but can not be checked off before the timer runs out.
+* Custom time limits for each task.
 * Login system stored in the cloud.
 
 ### Obstacles
@@ -36,5 +37,3 @@ you would be able to buy powerups and a variety of purchasable rewards from a sh
 leaderboard to compete with your friends, and an options menu with
 selectable themes.
 
-* Coin rewards for completing tasks.
-* Coin shop for powerups and rewards.
