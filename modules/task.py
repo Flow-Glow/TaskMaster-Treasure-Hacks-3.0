@@ -13,7 +13,6 @@ class Task(ft.UserControl):
         super().__init__()
         self.task_name = task_name
         self.task_duration = int(duration)
-        self.remanining_duration = self.task_duration
         self.remove = remove_func
         self.username = username
         self.firebase = fb()
@@ -28,7 +27,20 @@ class Task(ft.UserControl):
         self.edit_name = ft.TextField(autofocus=True, width=500, height=60)
         self.edit_duration = ft.Slider(
             min=1, max=60, divisions=59, label="Duration {value} minutes", width=250, value=self.task_duration)
-        self.pb = ft.ProgressBar()
+        self.timer_progess_bar = ft.ProgressBar()
+        self.play_btn = ft.IconButton(
+                            ft.icons.PLAY_CIRCLE,
+                            tooltip="Start Timer",
+                            icon_color=ft.colors.GREEN,
+                            on_click=self.on_start_clicked
+                        )
+        self.pause_btn = ft.IconButton(
+                            ft.icons.PAUSE_CIRCLE_SHARP,
+                            tooltip="Stop Timer",
+                            icon_color=ft.colors.GREEN,
+                            visible=False,
+                            on_click=self.on_pause_clicked
+                        )
 
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
@@ -56,13 +68,8 @@ class Task(ft.UserControl):
                             on_click=self.on_remove_task_clicked
                         ),
                         # Start Icon
-                        ft.IconButton(
-                            ft.icons.PLAY_CIRCLE,
-                            tooltip="Start Timer",
-                            icon_color=ft.colors.GREEN,
-                            on_click=self.on_start_clicked
-                        )
-
+                        self.play_btn,
+                        self.pause_btn
                     ],
                 ),
             ],
@@ -92,7 +99,7 @@ class Task(ft.UserControl):
 
         # A timer that is only visible when the user start the task
         self.timer_view = ft.Column(controls=
-            [ft.Text(self.task_name), self.pb], visible=False)
+            [ft.Text(self.task_name), self.timer_progess_bar], visible=False)
 
         # Return the controls
         return ft.Column(controls=[self.display_task, self.edit_view, ft.Column([self.timer_view])])
@@ -125,12 +132,27 @@ class Task(ft.UserControl):
     # To display a timer as a progress bar
     def on_start_clicked(self, e):
         self.timer_view.visible = True
+        self.timer_progess_bar.visible = True
         self.task_checkbox.disabled = True
+        self.play_btn.visible = False
+        self.pause_btn.visible = True
+        # counting down
         for i in range(self.task_duration*60 + 1):
-            self.pb.value = i*(1/(self.task_duration*60))
+            self.timer_progess_bar.value = i*(1/(self.task_duration*60))
+            # If the timer count down to 0
             if i == self.task_duration*60:
                 self.task_checkbox.disabled = False 
                 self.timer_view.visible = False
                 self.task_checkbox.value = True
+                self.play_btn.visible = True
+                self.pause_btn.visible = False
             sleep(1)
             self.update()
+    
+    # To puase the timer
+    def on_pause_clicked(self, e):
+        self.play_btn.visible = True
+        self.pause_btn.visible = False
+        self.update()
+
+
