@@ -4,7 +4,6 @@ A class to represent a task
 
 import flet as ft
 from modules.Utils import fb
-import time
 
 
 class Task(ft.UserControl):
@@ -94,7 +93,7 @@ class Task(ft.UserControl):
             [ft.Text(self.task_name), self.pb], visible=False)
 
         # Return the controls
-        return ft.Column(controls=[self.display_task, self.edit_view, ft.Row([self.timer_view])])
+        return ft.Column(controls=[self.display_task, self.edit_view, ft.Column([self.timer_view])])
 
     def on_remove_task_clicked(self, e):
         self.remove(self)
@@ -121,3 +120,4 @@ class Task(ft.UserControl):
 
     def on_start_clicked(self, e):
         self.timer_view.visible = True
+        self.update()
