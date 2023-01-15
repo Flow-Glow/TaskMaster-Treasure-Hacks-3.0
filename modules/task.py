@@ -13,6 +13,7 @@ class Task(ft.UserControl):
         super().__init__()
         self.task_name = task_name
         self.task_duration = int(duration)
+        self.remain_duration = self.task_duration
         self.remove = remove_func
         self.username = username
         self.firebase = fb()
@@ -147,12 +148,15 @@ class Task(ft.UserControl):
                 self.play_btn.visible = True
                 self.pause_btn.visible = False
             sleep(1)
+            self.remain_duration = self.task_duration*60 - 1
             self.update()
     
     # To puase the timer
     def on_pause_clicked(self, e):
         self.play_btn.visible = True
         self.pause_btn.visible = False
+        self.timer_progess_bar.visible = False
+        self.task_duration = self.remain_duration/60
         self.update()
 
 
