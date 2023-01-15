@@ -4,6 +4,7 @@ A class to represent a task
 
 import flet as ft
 from modules.Utils import fb
+from time import sleep
 
 
 class Task(ft.UserControl):
@@ -118,6 +119,10 @@ class Task(ft.UserControl):
         self.firebase.update_data(self.username, dict(data))
         self.update()
 
+    # To display a timer as a progress bar
     def on_start_clicked(self, e):
         self.timer_view.visible = True
-        self.update()
+        for i in range(int(self.task_duration)*60 + 1):
+            self.pb.value = i*(1/(self.task_duration*60))
+            sleep(1)
+            self.update()
