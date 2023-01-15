@@ -20,7 +20,7 @@ a time for a task, logging in, and keeping track of and receiving currency.
 ### Project features
 * To-do list.
 * Productivity meter.
-* Custom time limits for each task.
+* Custom time limits for each task. Task can be paused but can not be checked off before the timer runs out.
 
 * Login system stored in the cloud.
 
