@@ -12,7 +12,8 @@ class Task(ft.UserControl):
     def __init__(self, task_name, duration, remove_func, username) -> None:
         super().__init__()
         self.task_name = task_name
-        self.task_duration = duration
+        self.task_duration = int(duration)
+        self.remanining_duration = self.task_duration
         self.remove = remove_func
         self.username = username
         self.firebase = fb()
@@ -108,6 +109,8 @@ class Task(ft.UserControl):
     # Change the label of the checkbox after edited
     def on_save_clicked(self, e):
         self.task_checkbox.label = f"{self.edit_name.value} - {int(self.edit_duration.value)} minutes"
+        self.task_duration = int(self.edit_duration.value)
+        self.task_name = self.edit_name
         self.display_task.visible = True
         self.edit_view.visible = False
         data = dict(self.firebase.get_data(self.username))
@@ -122,7 +125,12 @@ class Task(ft.UserControl):
     # To display a timer as a progress bar
     def on_start_clicked(self, e):
         self.timer_view.visible = True
-        for i in range(int(self.task_duration)*60 + 1):
+        self.task_checkbox.disabled = True
+        for i in range(self.task_duration*60 + 1):
             self.pb.value = i*(1/(self.task_duration*60))
+            if i == self.task_duration*60:
+                self.task_checkbox.disabled = False 
+                self.timer_view.visible = False
+                self.task_checkbox.value = True
             sleep(1)
             self.update()
