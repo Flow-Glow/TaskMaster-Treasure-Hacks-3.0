@@ -61,9 +61,10 @@ class Login(Container):
                 self.app.add(App(self.username.value))
                 self.update()
 
+
     def LoginContainer(self):
         # Login Page Data
-        self.username = TextField(label="User name")
+        self.username = TextField(label="Username")
         self.password = TextField(label="Password", password=True)
         title = Container(Text(value="TaskMaster",
                                height=100, color=colors.CYAN,
@@ -76,7 +77,7 @@ class Login(Container):
                 self.password,
                 self.loading,
                 ElevatedButton(
-                    "Login", on_click=self.Login, )
+                    "Login", on_click=self.Login,autofocus=True)
             ], alignment=MainAxisAlignment.CENTER),
             padding=Padding(20, 20, 20, 20),
             margin=Margin(0, 0, 0, 20),

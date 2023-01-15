@@ -35,19 +35,16 @@ class App(ft.UserControl):
         self.time_slider_view = ft.Column(controls=[ft.Text(
             value="Choose duration via slider: "), self.time_slider], visible=False)
         self.data = dict(self.firebase.get_data(self.username))
-        self.productivityBar = ft.ProgressBar(width=200,
+        self.productivityBar = ft.ProgressBar(
                                               bgcolor="#eeeeee",
-                                              value=0.5,
-                                              height=20,
-                                              rotate=math.pi / -2,
+                                              value=self.data["productivity"],
+                                              height=10,
                                               tooltip="Productivity Bar",
+                                              expand=True,
 
                                               )
 
-    def animate_rotate(self):
 
-        self.productivityBar.rotate += math.pi / 2
-        print(math.pi / 2)
 
     def load_tasks(self):
         if 'Tasks' in self.data.keys():
@@ -62,11 +59,12 @@ class App(ft.UserControl):
         return ft.Column(
             width=585,
             controls=[
-                ft.Row([self.productivityBar]),
                 # First row for title
                 ft.Row([self.title], alignment="center"),
                 # top left corner
+                # Second row for hello message
                 ft.Row([self.hello], alignment="center"),
+                ft.Row([self.productivityBar], alignment="center"),
                 # Second for the inputting task
                 ft.Row([self.task_input_field, self.add_button],
                        alignment="center"),
