@@ -3,23 +3,29 @@ A class to represent a task
 """
 
 import flet as ft
+from modules.Utils import fb
+import time
 
 
 class Task(ft.UserControl):
 
-    def __init__(self, task_name, duration, remove_func) -> None:
+    def __init__(self, task_name, duration, remove_func, username) -> None:
         super().__init__()
         self.task_name = task_name
         self.task_duration = duration
         self.remove = remove_func
-        
+        self.username = username
+        self.firebase = fb()
+        if self.task_duration is None:
+            self.task_duration = 10
+            return
 
     def build(self):
 
         self.task_checkbox = ft.Checkbox(
             label=f"{self.task_name} - {int(self.task_duration)} minutes")
         self.edit_name = ft.TextField(autofocus=True, width=500, height=60)
-        self.edit_duration = ft.Slider(min=1, max=60, divisions=59, label="Duration {value} minutes",width=250)
+        self.edit_duration = ft.Slider(min=1, max=60, divisions=59, label="Duration {value} minutes", width=250,value= self.task_duration)
         # Display the task to the user with the option to edit or delete
         self.display_task = ft.Row(
             alignment="spaceBetween",
@@ -59,14 +65,14 @@ class Task(ft.UserControl):
                 ft.Column(controls=[
                     self.edit_name,
                     ft.Row(controls=[ft.Text("Set new Duration: "),
-                    self.edit_duration]),
+                                     self.edit_duration]),
                     ft.IconButton(
                         icon=ft.icons.SAVE,
                         icon_color=ft.colors.BLUE,
                         tooltip="Save",
                         on_click=self.on_save_clicked
                     )
-                        ]
+                ]
                 )
             ]
         )
@@ -86,4 +92,14 @@ class Task(ft.UserControl):
         self.task_checkbox.label = f"{self.edit_name.value} - {int(self.edit_duration.value)} minutes"
         self.display_task.visible = True
         self.edit_view.visible = False
+        data = dict(self.firebase.get_data(self.username))
+        try:
+            i = data["Tasks"].index([self.task_name,self.task_duration])
+        except Exception:
+            i = data["Tasks"].index([self.edit_name.value, self.edit_duration.value])
+        print(data)
+        data["Tasks"][i][0] = self.edit_name.value
+        data["Tasks"][i][1] = self.edit_duration.value
+        print(data)
+        self.firebase.update_data(self.username,dict(data))
         self.update()

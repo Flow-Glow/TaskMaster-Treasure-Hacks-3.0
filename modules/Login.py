@@ -17,20 +17,7 @@ from modules.application import App
 from modules.Utils import fb
 
 
-
-
-
 class Login(Container):
-    config = {
-        "apiKey": "AIzaSyDkiJYNGsRnSlVAd1eQ5Am8IWYgUgsdgBo",
-        "authDomain": "taskmaster-992bc.firebaseapp.com",
-        "projectId": "taskmaster-992bc",
-        "storageBucket": "taskmaster-992bc.appspot.com",
-        "messagingSenderId": "309035351282",
-        "appId": "1:309035351282:web:d7e157294b37453e4ea46b",
-        "measurementId": "G-CK5YXPBD98",
-        "databaseURL": "https://taskmaster-992bc-default-rtdb.firebaseio.com/"
-    }
 
     def __init__(self, app, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -38,7 +25,7 @@ class Login(Container):
         self.password = None
         self.username = None
         self.loading = None
-        self.firebase = fb(self.config)
+        self.firebase = fb()
         self.app = app
         self.expand = True
         self.content = Column(
@@ -69,11 +56,12 @@ class Login(Container):
                 self.update()
                 return
             else:
-                self.firebase.set_data(self.username.value, {"password": self.password.value})
+                print("Creating user")
+                self.firebase.set_data(self.username.value,
+                                       {"password": self.password.value, "tasks": {}, "currency": 0, "productivity": 0})
                 self.app.remove(self)
                 self.app.add(App(self.username.value))
                 self.update()
-
 
     def LoginContainer(self):
         # Login Page Data
