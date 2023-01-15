@@ -5,6 +5,7 @@ Instance of the application
 from modules.task import Task
 import flet as ft
 from modules.Utils import fb
+import math
 
 
 class App(ft.UserControl):
@@ -34,6 +35,19 @@ class App(ft.UserControl):
         self.time_slider_view = ft.Column(controls=[ft.Text(
             value="Choose duration via slider: "), self.time_slider], visible=False)
         self.data = dict(self.firebase.get_data(self.username))
+        self.productivityBar = ft.ProgressBar(width=200,
+                                              bgcolor="#eeeeee",
+                                              value=0.5,
+                                              height=20,
+                                              rotate=math.pi / -2,
+                                              tooltip="Productivity Bar",
+
+                                              )
+
+    def animate_rotate(self):
+
+        self.productivityBar.rotate += math.pi / 2
+        print(math.pi / 2)
 
     def load_tasks(self):
         if 'Tasks' in self.data.keys():
@@ -48,6 +62,7 @@ class App(ft.UserControl):
         return ft.Column(
             width=585,
             controls=[
+                ft.Row([self.productivityBar]),
                 # First row for title
                 ft.Row([self.title], alignment="center"),
                 # top left corner
@@ -58,8 +73,11 @@ class App(ft.UserControl):
                 # Third row for task duration slider
                 ft.Row([self.time_slider_view], alignment="center"),
                 # Return self.column, so later we can add tasks below this column
-                self.task_list
+                self.task_list,
+                #put the productivity bar at the top right corner
+
             ])
+
 
     def on_add_button_clicked(self, e):
         if not self.task_input_field.value:
