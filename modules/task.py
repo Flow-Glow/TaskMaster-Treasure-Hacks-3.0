@@ -93,13 +93,10 @@ class Task(ft.UserControl):
         self.display_task.visible = True
         self.edit_view.visible = False
         data = dict(self.firebase.get_data(self.username))
-        try:
-            i = data["Tasks"].index([self.task_name,self.task_duration])
-        except Exception:
-            i = data["Tasks"].index([self.edit_name.value, self.edit_duration.value])
-        print(data)
-        data["Tasks"][i][0] = self.edit_name.value
-        data["Tasks"][i][1] = self.edit_duration.value
-        print(data)
+        for i in range(len(data["Tasks"])):
+            if data["Tasks"][i][0] == self.task_name:
+                data["Tasks"][i][0] = self.edit_name.value
+                data["Tasks"][i][1] = self.edit_duration.value
+                break
         self.firebase.update_data(self.username,dict(data))
         self.update()

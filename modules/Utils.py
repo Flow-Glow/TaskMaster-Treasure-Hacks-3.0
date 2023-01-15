@@ -53,6 +53,3 @@ class fb:
     def clear_database(self):
         """Clear the database."""
         self.db.remove()
-
-
-

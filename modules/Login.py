@@ -47,7 +47,6 @@ class Login(Container):
             # check if user exists in db
             if self.firebase.check_exist(self.username.value):
                 if self.firebase.get_data(self.username.value)["password"] == self.password.value:
-                    print("Signed in")
                     self.app.remove(self)
                     self.app.add(App(self.username.value))
                 else:
@@ -56,7 +55,6 @@ class Login(Container):
                 self.update()
                 return
             else:
-                print("Creating user")
                 self.firebase.set_data(self.username.value,
                                        {"password": self.password.value, "tasks": {}, "currency": 0, "productivity": 0})
                 self.app.remove(self)

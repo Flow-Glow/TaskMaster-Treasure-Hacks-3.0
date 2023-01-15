@@ -38,7 +38,6 @@ class App(ft.UserControl):
     def load_tasks(self):
         if 'Tasks' in self.data.keys():
             for task in self.data["Tasks"]:
-                print(task)
                 new_task = Task(task[0], task[1], self.delete_task, self.username)
                 self.task_list.controls.append(new_task)
 
@@ -51,7 +50,7 @@ class App(ft.UserControl):
             controls=[
                 # First row for title
                 ft.Row([self.title], alignment="center"),
-                #top left corner
+                # top left corner
                 ft.Row([self.hello], alignment="center"),
                 # Second for the inputting task
                 ft.Row([self.task_input_field, self.add_button],
@@ -76,7 +75,7 @@ class App(ft.UserControl):
             self.task_input_field.value = ""
             self.time_slider_view.visible = False
 
-            self.data["Tasks"] = [[task.task_name,task.task_duration] for task in self.task_list.controls]
+            self.data["Tasks"] = [[task.task_name, task.task_duration] for task in self.task_list.controls]
         self.firebase.set_data(self.username, self.data)
         self.update()
 
@@ -89,9 +88,8 @@ class App(ft.UserControl):
     # Function to remove a task from the list
     def delete_task(self, task: Task):
         self.task_list.controls.remove(task)
-        self.data["Tasks"] = [[task.task_name,task.task_duration] for task in self.task_list.controls]
+        self.data["Tasks"] = [{i: [task.task_name, task.task_duration]} for i, task in
+                              enumerate(self.task_list.controls)]
 
         self.firebase.update_data(self.username, self.data)
         self.update()
-
-
